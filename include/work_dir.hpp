@@ -1,12 +1,12 @@
 // Copyright 2022 roflanpotsan l1sZ@ya.ru
-#ifndef TEMPLATE_MY_UNORDERED_MAP_H
-#define TEMPLATE_MY_UNORDERED_MAP_H
+#ifndef INCLUDE_WORK_DIR_HPP_
+#define INCLUDE_WORK_DIR_HPP_
+#include <functional>
 #include <iostream>
 #include <iterator>
 #include <list>
-#include <utility>
-#include <functional>
 #include <unordered_map>
+#include <utility>
 template <class Key, class T, class Hash = std::hash<Key>,
           class EqualKey = std::equal_to<Key>>  // Hash = hash_func, EqualKey =
                                                 // check whether items
@@ -58,14 +58,15 @@ class unordered_map {
           array = std::next(array);
         }
       }
-      if (array == begin + max_size)
+      if (array == begin + max_size) {
         if ((*array).empty())
           ptr = nullptr;
         else
           ptr = &(*((*array).begin()));
-      else
+      } else {
         ptr = &(*((*array).begin()));
-    };
+      }
+    }
 
     ~iterator() = default;
 
@@ -362,4 +363,4 @@ bool operator!=(const unordered_map<Key, T> &new_set,
   return !(new_set == old_set);
 }
 
-#endif  // TEMPLATE_MY_UNORDERED_MAP_H
+#endif  // INCLUDE_WORK_DIR_HPP_
