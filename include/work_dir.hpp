@@ -5,6 +5,8 @@
 #include <iterator>
 #include <list>
 #include <utility>
+#include <functional>
+#include <unordered_map>
 template <class Key, class T, class Hash = std::hash<Key>,
           class EqualKey = std::equal_to<Key>>  // Hash = hash_func, EqualKey =
                                                 // check whether items
@@ -99,11 +101,11 @@ class unordered_map {
 
     friend bool operator==(const iterator &a, const iterator &b) {
       return a.ptr == b.ptr;
-    };
+    }
 
     friend bool operator!=(const iterator &a, const iterator &b) {
       return a.ptr != b.ptr;
-    };
+    }
   };
 
   unordered_map() { hash_table = nullptr; }
@@ -248,22 +250,24 @@ class unordered_map {
   */
 
   const unordered_map<Key, T> &at(const std::pair<Key, T> &value) const {
-    if (!hash_table[std::hash<Key>()(value.first) % table_size].empty())
+    if (!hash_table[std::hash<Key>()(value.first) % table_size].empty()) {
       for (auto el : hash_table[std::hash<Key>()(value.first) % table_size]) {
         if (EqualKey{}(el.first, value.first)) {
           return *this;
         }
       }
+    }
     throw std::exception();
   }
 
   bool has(const std::pair<Key, T> &value) const {
-    if (!hash_table[std::hash<Key>()(value.first) % table_size].empty())
+    if (!hash_table[std::hash<Key>()(value.first) % table_size].empty()) {
       for (auto el : hash_table[std::hash<Key>()(value.first) % table_size]) {
         if (EqualKey{}(el.first, value.first)) {
           return true;
         }
       }
+    }
     return false;
   }
 
