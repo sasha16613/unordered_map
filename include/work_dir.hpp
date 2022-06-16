@@ -113,8 +113,6 @@ class unordered_map {
 
   unordered_map(std::initializer_list<std::pair<Key, T>> const &values) {
     table_size = values.size();
-    // table_size = 0;
-    // std::cout << table_size << "!!" << std::endl;
     hash_table = new std::list<std::pair<Key, T>>[table_size + 1];
     for (const auto &value : values) {
       this->insert(value);
@@ -124,9 +122,6 @@ class unordered_map {
   unordered_map(const unordered_map &values) {
     table_size = values.capacity();
     hash_table = new std::list<std::pair<Key, T>>[table_size + 1];
-    // for (auto i = values.begin(); i != values.end(); i++) {
-    //   this->insert(*i);
-    // }
     for (auto i : values) {
       std::pair<Key, T> b = i;
       this->insert(b);
@@ -167,55 +162,22 @@ class unordered_map {
   }
 
   void insert(const std::pair<Key, T> &value) {
-    // std::cout << table_size << std::endl;
     if (table_size == 0) {
       hash_table = new std::list<std::pair<Key, T>>[2];
       table_size++;
-      // std::cout << "!!!" << std::endl;
       hash_table[0].push_back(value);
       el_count++;
     } else {
-      // std::cout << "&&&" << std::endl;
-      // std::cout << el_count << std::endl;
-      // std::cout << table_size << std::endl;
       if (this->has(value)) {
         return;
       }
       if (el_count == table_size) {
         rehash();
       }
-      // std::cout << std::hash<Key>()(value.first) % table_size << std::endl;
-      // std::cout << value.first << std::endl;
-      // hash_table[Hash{}(value.first) % table_size].push_back(value);
       hash_table[std::hash<Key>()(value.first) % table_size].push_back(value);
       el_count++;
-      // std::cout << el_count << std::endl;
     }
   }
-
-  /*
-  template <class It>
-  void insert(It first, It last) {
-    while (first != last) {
-      if (table_size == 0) {
-        hash_table = new std::list<std::pair<Key, T>>[2];
-        table_size++;
-        hash_table[0].push_back(*first);
-        el_count++;
-      } else {
-        if (this->has(*first)) {
-          return;
-        }
-        if (el_count == table_size) {
-          rehash();
-        }
-        hash_table[Hash{}(*first) % table_size].push_back(*first);
-        el_count++;
-      }
-      ++first;
-    }
-  }
-   */
 
   void insert(std::initializer_list<std::pair<Key, T>> values) {
     for (const auto &value : values) {
@@ -237,24 +199,24 @@ class unordered_map {
       }
     }
   }
-  /*
-    std::pair<Key, T> operator[] (const std::pair<Key, T> &value) const {
-      if (!hash_table[std::hash<Key>()(value.first) % table_size].empty())
-        for (auto el : hash_table[std::hash<Key>()(value.first) % table_size]) {
-          if (EqualKey{}(el.first, value.first)) {
-            return value;
-          }
-        }
-      insert(value);
-      return value;
-    }
-  */
 
-  const unordered_map<Key, T> &at(const std::pair<Key, T> &value) const {
+  const std::pair<Key, T> operator[](const std::pair<Key, T> &value) {
+    if (!hash_table[std::hash<Key>()(value.first) % table_size].empty())
+      for (auto el : hash_table[std::hash<Key>()(value.first) % table_size]) {
+        if (EqualKey{}(el.first, value.first)) {
+          return std::make_pair(el.first, el.second);
+        }
+      }
+    this->insert(value);
+    // return std::make_pair(value.first, value.second);
+    return value;
+  }
+
+  const std::pair<Key, T> &at(const std::pair<Key, T> &value) const {
     if (!hash_table[std::hash<Key>()(value.first) % table_size].empty()) {
       for (auto el : hash_table[std::hash<Key>()(value.first) % table_size]) {
         if (EqualKey{}(el.first, value.first)) {
-          return *this;
+          return value;
         }
       }
     }
@@ -272,19 +234,6 @@ class unordered_map {
     return false;
   }
 
-  /*
-    bool has(const std::pair<Key, T> &value) const {
-      if (!hash_table[Hash{}(value.first) % table_size].empty())
-        for (auto el : hash_table[Hash{}(value.first) % table_size]) {
-          if (EqualKey{}(el.first, value.first)) {
-          //if (el.first == value.first) {
-            return true;
-          }
-        }
-      return false;
-    }
-    */
-
   void clear() {
     delete[] hash_table;
     hash_table = nullptr;
@@ -298,26 +247,14 @@ class unordered_map {
 
   void erase(const std::pair<Key, T> &value) {
     if (this->has(value)) {
-      // hash_table[Hash{}(value.first) % table_size].erase(find(value));
-      // //erase принемает итератор std::pair
-      hash_table[Hash{}(value.first) % table_size]
-          .clear();  ///заменить clear на erase!!!
+      hash_table[Hash{}(value.first) % table_size].clear();
       el_count--;
     }
   }
 
-  //  void print (unordered_map &t){
-  //    for (auto i : t){
-  //      std::cout << i.first << "!" << std::endl;
-  //      std::cout << i.second << std::endl;
-  //    }
-  //  }
-
   void erase(iterator pos) {
     if (this->has(*pos)) {
-      // hash_table[Hash{}((*pos).first) % table_size].erase(*pos);
-      hash_table[Hash{}((*pos).first) % table_size]
-          .clear();  ///заменить clear на erase!!!
+      hash_table[Hash{}((*pos).first) % table_size].clear();
       el_count--;
     }
   }
