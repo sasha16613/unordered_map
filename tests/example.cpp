@@ -1,4 +1,3 @@
-
 // Copyright 2022 roflanpotsan l1sZ@ya.ru
 
 #include <gtest/gtest.h>
