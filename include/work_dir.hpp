@@ -201,12 +201,13 @@ class unordered_map {
   }
 
   const std::pair<Key, T> operator[](const std::pair<Key, T> &value) {
-    if (!hash_table[std::hash<Key>()(value.first) % table_size].empty())
+    if (!hash_table[std::hash<Key>()(value.first) % table_size].empty()) {
       for (auto el : hash_table[std::hash<Key>()(value.first) % table_size]) {
         if (EqualKey{}(el.first, value.first)) {
           return std::make_pair(el.first, el.second);
         }
       }
+    }
     this->insert(value);
     // return std::make_pair(value.first, value.second);
     return value;
