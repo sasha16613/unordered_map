@@ -1,4 +1,4 @@
-// Copyright 2022 roflanpotsan l1sZ@ya.ru
+// Copyright 2022 AlexNov nikolay.sasha@mail.ru
 #ifndef INCLUDE_WORK_DIR_HPP_
 #define INCLUDE_WORK_DIR_HPP_
 #include <functional>

@@ -1,5 +1,5 @@
 
-// Copyright 2022 roflanpotsan l1sZ@ya.ru
+// Copyright 2022 AlexNov nikolay.sasha@mail.ru
 
 #include <gtest/gtest.h>
 #include <work_dir.hpp>
